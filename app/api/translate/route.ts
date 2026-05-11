@@ -18,9 +18,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: `Unsupported language: ${targetLanguage}` }, { status: 400 });
     }
 
-    // MyMemory requires bare ISO 639-1 codes in the langpair (e.g. en|hi, en|kn)
-    // Using locale codes like hi-IN breaks the API and causes transliteration
-    const url = `${MYMEMORY_URL}?q=${encodeURIComponent(text)}&langpair=en|${langCode}`;
+    // MyMemory uses bare ISO codes for most languages, but Hindi needs the full
+    // locale pair (en-US|hi-IN) to return Devanagari script instead of Romanized text.
+    const LOCALE_OVERRIDES: Record<string, string> = {
+      hi: 'en-US|hi-IN',
+    };
+    const langpair = LOCALE_OVERRIDES[langCode] ?? `en|${langCode}`;
+    const url = `${MYMEMORY_URL}?q=${encodeURIComponent(text)}&langpair=${langpair}`;
 
     const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
 
