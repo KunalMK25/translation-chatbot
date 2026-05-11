@@ -1,8 +1,6 @@
 # 🌐 LinguaBot — AI Translation Chatbot with Voice
 
-A sleek, dark-themed translation chatbot built with **Next.js 16**. Translate text into 16 languages instantly — **completely free, no API key required**. Now with full voice support: speak your input and hear translations read aloud.
-
-Powered by the [MyMemory Translation API](https://mymemory.translated.net/) and the browser-native **Web Speech API**.
+A sleek, dark-themed translation chatbot built with **Next.js 16**. Translate text into 16 languages instantly — **completely free, no API key required**. Speak your input and hear translations read aloud.
 
 ---
 
@@ -10,11 +8,11 @@ Powered by the [MyMemory Translation API](https://mymemory.translated.net/) and 
 
 | | Feature |
 |---|---|
-| 🌍 | **16 Languages** — Spanish, French, German, Japanese, Chinese, Arabic, Hindi, Korean, Kannada, and more |
-| 🎤 | **Voice Input** — Click the mic button and speak instead of typing (speech-to-text) |
+| 🌍 | **16 Languages** — Spanish, French, German, Japanese, Chinese, Arabic, Hindi, Kannada, Korean, and more |
+| 🎤 | **Voice Input** — Click the mic and speak instead of typing (speech-to-text) |
 | 🔊 | **Text-to-Speech** — Hear any translation read aloud in the correct language accent |
 | 💬 | **Chat Interface** — Clean, dark-themed conversation UI with typing indicators |
-| ⚡ | **100% Free** — Uses MyMemory API, no key or account needed |
+| ⚡ | **100% Free** — No API key or account needed |
 | ♿ | **Accessible** — Full keyboard navigation, ARIA labels, screen reader support |
 | 📱 | **Responsive** — Works on all screen sizes |
 
@@ -28,7 +26,7 @@ Click the **🎤 microphone button** next to the text field to start speaking. L
 - Automatically populate the input field when you finish
 - Display an error message if microphone access is denied or no speech is detected
 
-> Voice input uses English (`en-US`) as the source language, since LinguaBot translates *from* English.
+> Voice input uses English (`en-US`) as the source language.
 
 ### Text-to-Speech
 Every translation bubble has a **🔊 speak button**. Click it to:
@@ -51,7 +49,19 @@ Every translation bubble has a **🔊 speak button**. Click it to:
 | Portuguese | `pt` | Polish | `pl` |
 | Japanese | `ja` | Swedish | `sv` |
 | Chinese | `zh` | **Kannada** | `kn` |
-| Arabic | `ar` | Hindi | `hi` |
+| Arabic | `ar` | **Hindi** | `hi` |
+
+---
+
+## 🔧 Translation Engine
+
+LinguaBot uses a dual-engine approach for the best accuracy:
+
+- **Hindi & Kannada** → Google Translate public endpoint (proper Devanagari/Kannada script)
+- **All other languages** → MyMemory API (free, no key required)
+- Automatic fallback between engines if one is unavailable
+
+No API keys needed — works out of the box.
 
 ---
 
@@ -84,11 +94,11 @@ Every translation bubble has a **🔊 speak button**. Click it to:
 ### Running Tests
 
 ```bash
-npm test          # Run all tests once
+npm test            # Run all tests once
 npm run test:watch  # Watch mode
 ```
 
-The test suite includes **35 tests** across unit, property-based (fast-check), and integration tests covering all voice features and language support.
+35 tests covering unit, property-based (fast-check), and integration scenarios.
 
 ---
 
@@ -108,7 +118,7 @@ The test suite includes **35 tests** across unit, property-based (fast-check), a
 translation-chatbot/
 ├── app/
 │   ├── api/translate/
-│   │   ├── route.ts             # MyMemory API proxy
+│   │   ├── route.ts             # Dual-engine translation (Google + MyMemory)
 │   │   └── lang-codes.ts        # Language code map
 │   ├── components/
 │   │   ├── VoiceButton.tsx      # Mic toggle button
@@ -119,7 +129,7 @@ translation-chatbot/
 │   ├── globals.css              # Dark theme + voice button styles
 │   ├── layout.tsx
 │   └── page.tsx                 # Main chat UI
-├── src/test/                    # Vitest test suite
+├── src/test/                    # Vitest test suite (35 tests)
 └── vitest.config.ts
 ```
 
@@ -131,7 +141,8 @@ translation-chatbot/
 |-------|-----------|
 | Framework | Next.js 16 (App Router) |
 | Language | TypeScript |
-| Translation | MyMemory API (free) |
+| Translation (Hindi/Kannada) | Google Translate public endpoint |
+| Translation (other languages) | MyMemory API (free) |
 | Voice Input | Web Speech API — `SpeechRecognition` |
 | Voice Output | Web Speech API — `SpeechSynthesis` |
 | Styling | Custom CSS (dark theme) |
