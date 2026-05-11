@@ -1,8 +1,12 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { useSpeechRecognition } from './hooks/useSpeechRecognition';
+import { useSpeechSynthesis, SPEECH_LOCALES } from './hooks/useSpeechSynthesis';
+import { VoiceButton } from './components/VoiceButton';
+import { SpeakButton } from './components/SpeakButton';
 
-const LANGUAGES = [
+export const LANGUAGES = [
   { code: 'es', name: 'Spanish', flag: '🇪🇸' },
   { code: 'fr', name: 'French', flag: '🇫🇷' },
   { code: 'de', name: 'German', flag: '🇩🇪' },
@@ -18,9 +22,10 @@ const LANGUAGES = [
   { code: 'tr', name: 'Turkish', flag: '🇹🇷' },
   { code: 'pl', name: 'Polish', flag: '🇵🇱' },
   { code: 'sv', name: 'Swedish', flag: '🇸🇪' },
+  { code: 'kn', name: 'Kannada', flag: '🇮🇳' },
 ];
 
-interface Message {
+export interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
@@ -40,8 +45,43 @@ export default function Home() {
   const [input, setInput] = useState('');
   const [targetLang, setTargetLang] = useState('es');
   const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => { setMounted(true); }, []);
+
+  // Voice input callbacks
+  const onFinalResult = useCallback((transcript: string) => {
+    setInput(transcript);
+  }, []);
+
+  const onError = useCallback((message: string) => {
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content: message,
+        timestamp: new Date(),
+      },
+    ]);
+  }, []);
+
+  const {
+    isSupported: speechRecognitionSupported,
+    isRecording,
+    interimTranscript,
+    startRecognition,
+    stopRecognition,
+  } = useSpeechRecognition(onFinalResult, onError);
+
+  const {
+    isSupported: speechSynthesisSupported,
+    speakingId,
+    speak,
+    stop,
+  } = useSpeechSynthesis();
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -106,7 +146,27 @@ export default function Home() {
     }
   };
 
+  const handleVoiceToggle = () => {
+    if (isRecording) {
+      stopRecognition();
+    } else {
+      startRecognition();
+    }
+  };
+
+  const handleSpeak = (msg: Message) => {
+    if (speakingId === msg.id) {
+      stop();
+    } else {
+      const locale = SPEECH_LOCALES[targetLang] ?? 'en-US';
+      speak(msg.id, msg.content, locale);
+    }
+  };
+
   const selectedLang = LANGUAGES.find((l) => l.code === targetLang);
+
+  // Show interim transcript in textarea while recording
+  const textareaValue = isRecording && interimTranscript ? interimTranscript : input;
 
   return (
     <div className="app-wrapper">
@@ -145,11 +205,19 @@ export default function Home() {
               )}
               <div className={`bubble ${msg.role}`}>
                 <p className="bubble-text">{msg.content}</p>
+                {msg.role === 'assistant' && (
+                  <SpeakButton
+                    messageId={msg.id}
+                    isSupported={speechSynthesisSupported}
+                    isSpeaking={speakingId === msg.id}
+                    onClick={() => handleSpeak(msg)}
+                  />
+                )}
                 <span className="bubble-time">
-                  {msg.timestamp.toLocaleTimeString([], {
+                  {mounted ? msg.timestamp.toLocaleTimeString('en-US', {
                     hour: '2-digit',
                     minute: '2-digit',
-                  })}
+                  }) : ''}
                 </span>
               </div>
               {msg.role === 'user' && (
@@ -178,10 +246,15 @@ export default function Home() {
             ref={inputRef}
             className="message-input"
             placeholder={`Type text to translate to ${selectedLang?.name}...`}
-            value={input}
+            value={textareaValue}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             rows={1}
+          />
+          <VoiceButton
+            isSupported={speechRecognitionSupported}
+            isRecording={isRecording}
+            onClick={handleVoiceToggle}
           />
           <button
             className="send-btn"

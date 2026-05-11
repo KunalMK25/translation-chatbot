@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { LANG_CODES } from './lang-codes';
+
+export { LANG_CODES };
 
 export async function POST(req: NextRequest) {
   try {
@@ -7,13 +10,6 @@ export async function POST(req: NextRequest) {
     if (!text || !targetLanguage) {
       return NextResponse.json({ error: 'Missing text or targetLanguage' }, { status: 400 });
     }
-
-    const LANG_CODES: Record<string, string> = {
-      Spanish: 'es', French: 'fr', German: 'de', Italian: 'it',
-      Portuguese: 'pt', Japanese: 'ja', Chinese: 'zh', Arabic: 'ar',
-      Hindi: 'hi', Korean: 'ko', Russian: 'ru', Dutch: 'nl',
-      Turkish: 'tr', Polish: 'pl', Swedish: 'sv',
-    };
 
     const langCode = LANG_CODES[targetLanguage];
     if (!langCode) {

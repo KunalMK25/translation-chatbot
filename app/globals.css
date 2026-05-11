@@ -240,3 +240,53 @@ body {
   .bubble { max-width: 88%; }
   .lang-select { min-width: 130px; }
 }
+
+/* Voice Button */
+.mic-btn {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.mic-btn--active {
+  background: #fee2e2;
+  border-color: #ef4444;
+  animation: mic-pulse 1s ease-in-out infinite;
+}
+
+@keyframes mic-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Speak Button */
+.speak-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 6px;
+  transition: background 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.speak-btn:hover { background: var(--surface2); }
+
+.speak-btn--active {
+  background: rgba(91, 138, 244, 0.15);
+  border-color: var(--accent);
+}
