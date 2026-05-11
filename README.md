@@ -1,20 +1,20 @@
-# 🌐 LinguaBot — AI Translation Chatbot
+# 🌐 LinguaBot — Free AI Translation Chatbot
 
-A sleek, AI-powered translation chatbot built with **Next.js 15** and **Claude AI**. Translate text into 15+ languages instantly through a beautiful chat interface.
+A sleek translation chatbot built with **Next.js 15**. Translates text into 15+ languages instantly — **completely free, no API key required**.
+
+Powered by the [MyMemory Translation API](https://mymemory.translated.net/) (free, no sign-up).
 
 ## ✨ Features
 
 - 🌍 **15+ Languages** — Spanish, French, German, Japanese, Chinese, Arabic, Hindi, Korean, and more
-- 💬 **Chat Interface** — Natural conversation-style translation with history context
-- 🧠 **AI-Powered** — Uses Claude (Anthropic) for accurate, nuanced translations with cultural notes
-- ⚡ **Fast & Responsive** — Optimized for all screen sizes
-- 🌙 **Dark Theme** — Easy on the eyes
+- 💬 **Chat Interface** — Clean, dark-themed conversation UI
+- ⚡ **100% Free** — Uses MyMemory API, no key or account needed
+- 📱 **Responsive** — Works on all screen sizes
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js 18+
-- An [Anthropic API key](https://console.anthropic.com)
 
 ### Local Development
 
@@ -29,49 +29,29 @@ A sleek, AI-powered translation chatbot built with **Next.js 15** and **Claude A
    npm install
    ```
 
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env.local
-   ```
-   Edit `.env.local` and add your Anthropic API key:
-   ```
-   ANTHROPIC_API_KEY=your_api_key_here
-   ```
-
-4. **Run the development server**
+3. **Run the dev server**
    ```bash
    npm run dev
    ```
    Open [http://localhost:3000](http://localhost:3000)
 
+> No `.env` setup needed — the app works out of the box!
+
 ## 🌐 Deploy to Vercel
 
-### One-Click Deploy
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/YOUR_USERNAME/translation-chatbot)
-
-### Manual Deploy
-
-1. **Push to GitHub** (see below)
-
-2. **Import to Vercel**
-   - Go to [vercel.com](https://vercel.com) → New Project
-   - Import your GitHub repository
-   - Add Environment Variable: `ANTHROPIC_API_KEY`
-   - Deploy!
+1. Push to GitHub (see below)
+2. Go to [vercel.com/new](https://vercel.com/new) → Import your repo
+3. No environment variables needed — just click **Deploy**!
 
 ## 📁 Project Structure
 
 ```
 translation-chatbot/
 ├── app/
-│   ├── api/
-│   │   └── translate/
-│   │       └── route.ts      # API endpoint (Claude integration)
-│   ├── globals.css           # Global styles & dark theme
-│   ├── layout.tsx            # App layout & metadata
-│   └── page.tsx              # Main chat UI
-├── .env.example              # Environment variable template
-├── .gitignore
+│   ├── api/translate/route.ts   # Free MyMemory API integration
+│   ├── globals.css              # Dark theme styles
+│   ├── layout.tsx
+│   └── page.tsx                 # Chat UI
 └── README.md
 ```
 
@@ -81,7 +61,7 @@ translation-chatbot/
 |-------|-----------|
 | Framework | Next.js 15 (App Router) |
 | Language | TypeScript |
-| AI | Anthropic Claude API |
+| Translation | MyMemory API (free) |
 | Styling | Custom CSS (dark theme) |
 | Deployment | Vercel |
 

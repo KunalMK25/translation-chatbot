@@ -33,7 +33,7 @@ export default function Home() {
     {
       id: '0',
       role: 'assistant',
-      content: "Hello! I'm your translation assistant. Type any text and select a target language — I'll translate it instantly. You can also ask things like \"How do you say 'thank you' in Japanese?\" or \"Translate this paragraph to French.\"",
+      content: "Hello! I'm your translation assistant. Type any text, pick a target language, and I'll translate it instantly — completely free, no sign-up needed. Try: \"Good morning, how are you?\" → Japanese",
       timestamp: new Date(),
     },
   ]);
@@ -89,7 +89,7 @@ export default function Home() {
         {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: 'Error connecting to translation service. Please check your API key.',
+          content: 'Error connecting to the translation service. Please try again.',
           timestamp: new Date(),
         },
       ]);
